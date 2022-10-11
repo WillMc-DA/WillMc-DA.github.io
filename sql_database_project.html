@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Will Mc - Data Analyst</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript>
+			<link rel="stylesheet" href="assets/css/noscript.css" />
+		</noscript>
+	</head>
+	
+	<body class="is-preload">
+	
+		<!-- Wrapper -->
+		<div id="wrapper" class="fade-in">
+	
+	
+			<!-- Header -->
+			<header id="header">
+				<a class="logo">William Mc Weeney</a>
+			</header>
+	
+			<!-- Nav -->
+			<nav id="nav">
+				<ul class="links">
+					<li class="active"><a href="index.html">Projects</a></li>
+					
+
+				</ul>
+				<ul class="icons">
+					<li><a href="https://www.linkedin.com/in/willmc1/" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+				<li><a href="https://github.com/WillMc-DA" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+				</ul>
+			</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<h1>From CSV files to <br />an SQL Database</h1>
+									<p>I took the CSV files we used in CareerFoundry, for our Instacart Analysis. Then I created SQL databases, in both SQL Server and PostreSQL.</p>
+								</header>
+								<div class="image main"><img src="images/sqldatabaseBLUE.jpg" alt="" /></div>
+								<p><h2>What:</h2>
+									Converting 4 CSV files - that portray to show the orders of Instacart Customers - into an SQL Database.</p>
+									
+									<h2>Why:</h2>
+									<ul>
+										<li>Lack of SQL Databases for people to test their skills on.</li>
+										<li>See what the issues are with converting to an SQL Database.</li>
+											<li>See if I could do it.</li>
+												<li>This particular dataset is something CareerFoundry students are familiar with, as we use it with Python. So, we know the answer, now we get to work out how to ask SQL the right question so we get the same answer as we got in Python.</li>
+									</ul>
+									
+									<p><h2>How:</h2>
+									<a href="https://www.careerfoundry.com">CareerFoundry</a> teaches using PostgreSQL (pgAdmin4).
+									<a href="https://www.youtube.com/c/AlexTheAnalyst"> Alex the Analyst</a> teaches using SQL Server.
+									So I created the database using both. <br>
+									I did it with SQL Server first. Then I hit issues re-importing it (so, fellow CF students would not be able to install it).
+									I did it with PostgreSQL - so much smoother, and faster.
+									Smoother and faster may have to do with learning from my issues with SQL Server, but here is my breakdown of pros and cons of SQL Server v PostgreSQL
+									<br></p>
+									<div class="box">
+									<H4>SQL server V PostgreSQL - recognising column lengths</H4>
+									Product name, which had a max length - measured using LEN in Excel - of 159 - still caused issues in SQL Server. Had to set it to MAX. <br>
+									PostgreSQL accepted nvarchar(160).
+									<br></p>
+									<H4>SQL server v PostgreSQL - Importing datasets</H4>
+									SQL Server did not like importing files with 32 million entries. I had to break it down into 7 chunks… using the order_day_of_week as a clean cut. <br>
+									PostgreSQL had no such issue - 130 seconds for the full 32 million entries, no real memory drain.
+									<br></p>
+									<H4>SQL server v PostgreSQL - Exporting the database</H4>
+									When I exported using Scripts in SQL Server - Schemas AND Data - it ended up as a 14GB file.<br>
+									When I created a Backup in PostgreSQL it was 1.4GB</p></div>
+
+									<H3>Cleaning out the traps</H3>
+									CareerFoundy set up traps for us to find, and work out, in the Instacart Achievement Datasets.<br>
+									- Duplicates <br>
+									There were full duplicates of Products, which would not allow me to put product_id as a Primary Key in SQL. 
+									But in such an SQL database having the product_id as a primary key is a must, if only to stop employees accidently giving 2 products the same ID.<br>
+									So I removed these, known - as I had found them while doing the achievement in Python - duplicates, in Excel.<br></p>
+<hr>
+									<H3>Installing into SQL SERVER</H3>
+									I used the <b>Tasks -> Import Flat File </b>option (it reads the columns names, and also gives suggestions as to what the data type should be)
+									But, as I mentioned above, it did not like the length of the Product Name being 160, 200 or even 250. Despite me checking the max length in Excel, 
+									using the LEN function - which returned a max of 159 - this had to be set to <i>nvarchar(MAX)</i>, for it to work.<br>
+									The size of the <i>'orders'</i> CSV file was the next issue. SQL Server could not handle the file with 32 million entries (suprisingly, this was not to do with my computers RAM)<br>
+									<br>I knew that dataset was going to have to go in in parts, so I researched how to add CSV file data into an existing Table in SQL Server - and the general concensus was 
+									to create a table with the new data, set up exactly like the main table and use the <i>INSERT INTO</i> function.<br>		
+									<pre><code>INSERT INTO orders(column1, order_id, user_id, order_number, orders_day_of_week, 
+order_hour_of_day, days_since_prior_order, product_id, add_to_cart_order, reordered)
+SELECT column1, order_id, user_id, order_number, orders_day_of_week, order_hour_of_day, 
+days_since_prior_order, product_id, add_to_cart_order, reordered FROM day6 
+WHERE orders_day_of_week NOT IN (SELECT orders_day_of_week FROM orders);
+										</code></pre>				
+									The important part of this script was <i>WHERE orders_day_of_week NOT IN (SELECT orders_day_of_week FROM orders)</i>. The new table that I am integrating 
+									would need to have unique data in all cells of the column I was using as the key.
+									So I looked at the dataset - not really knowing where SQL Servers limits were - and worked out that there would be no real <i>'clean'</i> cut in any of the columns other 
+									than <i>orders_hour_of_day</i> or <i>orders_day_of_week</i>, and seen as there are less days of the week than hours in the day (and so less work - exporting AND importing), 
+									I went back to Python and split out the entries for orders_day_of_week = 0 (6.2million entries) and tested installing it into SQL Server... and it worked. So I split
+									out the other 6 days and proceeded to import the data into the main <i>'orders'</i> table.<br></p>
+									
+									
+									
+									<H4>relationships between tables</H4>
+									This would be a highly technical, and a boring read, but we do need to create relationships in between tables. So that, for example the <i>products</i> table knows to look to the 
+									<i>departments</i> table to confirm the department_id. <br>
+									This is when I also learned that, despite me knowing it would be good for the department_id's and department_name's to both be unique, you can't have 2 Primary Keys
+									 in a table, unless they are both classed as a foreign key in the 2nd table. <br>
+									 So I went and created the relevant relationships, after reinstalling the departments dataset/table.<br></p>
+									
+									
+									
+									 <H4>Exporting the database</H4>
+									Again, another technical and boring read. But, going on StackOverflows general concensus, I exported the <i>Schema and Data</i> using the 
+									<b>Tasks -> Generate Scripts</b> function.<br>
+									It ended up being a 14GB file... which I could not get to install into PostgreSQL (or even back into SQL Server) - being able to install it would be a requirement, 
+									as it is for other CareerFoundry students.<br></p>
+<hr>
+
+
+
+									<H3>Installing into postgresql</H3>
+									First I had to create the tables, via scripts. And I had to detail what the Datatypes were myself.
+									<pre><code>CREATE TABLE products (
+product_id INT,
+product_name VARCHAR(160),
+aisle_id INT,
+department_id INT,
+prices MONEY,
+PRIMARY KEY (product_id)
+)</code></pre>
+Then I proceeded to <i>Import</i> the data - selecting which columns should not be NULL, as I went.<br>
+The full 32 million entries <i>'orders.csv'</i> went in in 130 seconds, and with no noticeable memory spike! <br><br>
+<b>Creating relationships - Done</b>
+<span class="image fit"><img src="images/sqlerd.jpg" alt="" /></span>
+
+<H4>Exporting the database</H4>
+Here I just chose <b>'Backup'</b>, selected Tar file and gave it a name. Less than a minute later I had my SQL file.
+
+<hr>
+
+
+<h3>Lessons learned from this project</h3>
+<ul>
+	<li>Creating an SQL Database - for me to run queries on - is actually not that hard, the planning of the tables was the main part.</li>
+	<li>SQL Server is more work, to install the data, but the data type suggesting is handy for a new DA like me.</li>
+	<li>Exporting from SQL Server will give you a big file, but when both are compressed, there is only a difference of 100-200 MB.</li>
+</ul>
+
+<hr>
+<h3>The datasets</h3>
+The original 4 datasets are created by, and therefore belong to, CareerFoundry.<br>
+While this Database was created for my fellow CareerFoundry students - feel free to request it (My Email is below - or via LinkedIn)
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+	<footer id="footer">
+		<section>
+			<img src="images/Will Mc.jpg" alt="" /><br>
+			I am a Data Analyst with critical thinking and data interrogation skills | Python | Tableau | Excel | SQL - Data Cleaner, Interrogator, Visualiser.
+		</section>
+		<section class="split contact">
+			<section class="alt">
+				<h3>Address</h3>
+				<p>Berlin Metropolitan Area, Germany</p>
+			</section>
+			<section>
+				<h3>Phone</h3>
+				<p><a href="#">(01525) 9483737</a></p>
+			</section>
+			<section>
+				<h3>Email</h3>
+				<p><a href="#">WillMcLG@gmail.com</a></p>
+			</section>
+			<section>
+				<h3>Social</h3>
+				<ul class="icons alt">
+					<li><a href="https://www.linkedin.com/in/willmc1/" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+				<li><a href="https://github.com/WillMc-DA" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+				</ul>
+			</section>
+		</section>
+	</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; William Mc Weeney</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
