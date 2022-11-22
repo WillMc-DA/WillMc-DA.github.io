@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Will Mc - Data Analyst</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript>
+			<link rel="stylesheet" href="assets/css/noscript.css" />
+		</noscript>
+	</head>
+	
+	<body class="is-preload">
+	
+		<!-- Wrapper -->
+		<div id="wrapper" class="fade-in">
+	
+	
+			<!-- Header -->
+			<header id="header">
+				<a class="logo">William Mc Weeney</a>
+			</header>
+	
+			<!-- Nav -->
+			<nav id="nav">
+				<ul class="links">
+					<li class="active"><a href="index.html">Projects</a></li>
+					<li><a href="about_me.html">About Me</a></li>
+					
+
+				</ul>
+				<ul class="icons">
+					<li><a href="https://www.linkedin.com/in/willmc1/" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+				<li><a href="https://github.com/WillMc-DA" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+				</ul>
+			</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<h1>Arrests in NYC<br />as a Dashboard </h1>
+									<p>This dashboard is designed to be easily updated when new data becomes available.</p>
+								</header>
+								<div class="image main"><img src="images/NYPD_Dashboard1008.jpg" alt="" /></div>
+								<p><h2>What:</h2>
+									A Tableau Dashboard to visualise the arrests made in New York city this year.</p>
+									
+									<h2>Why:</h2>
+									I saw another persons version of this – with no interactivity, and a pie chart showing the % of the crimes in each borough
+									 – and just thought to myself <i>“This can be so much better”</i>.
+									
+									<h2>How:</h2>
+										First I got the ‘Incident Level Arrest Data - current year through most recent full quarter’ dataset from the NYC Data 
+										website - <a href="https://www.nyc.gov/site/nypd/stats/crime-statistics/citywide-crime-stats.page" target="_blank">https://www.nyc.gov/site/nypd/stats/crime-statistics/citywide-crime-stats.page</a>
+									<br>
+									Next I looked into the csv file using Excel – only 140k entries – and spotted two minor issues.
+									<ul>
+										<li>There were entries with (null) in both the PD_DESC and OFNS_DESC columns. </li>
+										<li>The ARREST_BORO had the boroughs as letters – B, K, S, Q & M.</li>
+									</ul>
+									<img src="images/NYPD_Nulls.jpg" alt="" /><br><br>
+									<h3>Nulls:</h3>
+									After turning on the Filter function in Excel, I then organised the PD_DESC column by A-Z. 
+									This made all the (null)’s be at the top of the sheet. I noticed that any entry that had (null) 
+									in the PD_DESC column, also had (null) in the OFNS_DESC.<br>
+									I pondered if the codes in the LAW_CODE might give me an idea what the nulls were supposed to be, 
+									but all the codes in the null entries were unique to nulls.<br>
+									In the end, I ended up deleting 379 entries that had (null).<br><br>
+
+									<h3>Boroughs:</h3>
+									I knew what the 5 letters - B, K, S, Q & M - stood for (K being BrooKlyn).<br>
+									However, with my initial plan being – <i>make it as easy for anybody to use newer data to update the 
+									report</i> – I decided that changing the Aliases in Tableau would be better than changing in the Excel 
+									file.<br><br>
+									<hr>
+									<h2>Deciding on the charts/info needed:</h2>
+									<img src="images/NYPDInspiration_Dashboard.jpg" alt="" /><br><br>
+									
+									<b>The original Tableau Dashboard had:</b>
+									<ul>
+										<li>Total Arrests (single number)
+										<li>Total Types of Crimes Committed (single number)
+										<li>Total NYC Precincts (single number)
+										<li>Arrests by Borough (Pie Chart)
+										<li>Arrests by Race (Bar Chart – single colour)
+										<li>Arrests by Sex (Stacked Bar Chart)
+										<li>Arrests by Crime Type (Tree Chart)
+										<li>Arrests Made Over Time (Line Chart – based on sex)
+									</ul>
+
+									<h3>My thoughts:</h3>
+									<b>‘Total Arrests’</b> was going to be a primary need, as it is the basis for all the other charts.<br><br>
+									While <b>‘Total Types of Crimes Committed’</b> might be mildly interesting, 
+									<b>‘Total NYC Precincts’</b> really means nothing for this Dashboard – I have decided not to use either.<br><br>
+									<b>‘Arrests by Borough’ as a Pie Chart!</b> This is what got me going. I did not know what the 
+									5 boroughs of NYC look like, in relation to size or population. But with Staten Island having 
+									only 5% of the crimes, compared to Brooklyn having 27%, I immediately asked <i>“How big is Staten Island, 
+									compared to Brooklyn? Maybe that is why there is such a difference.”</i>. As a visualiser I went straight for, 
+									<i>“show me the size difference visually”</i>, but I also thought about the population difference. (500k in Staten Island, 
+									2.5 million in Brooklyn)<br>
+									Making the Boroughs show up as a map, gives an instant visual aid to the number of arrests. But this would 
+									require a GeoJSON file to show the outlines of the boroughs.<br><br>
+									<b>‘Arrests by Race as a Bar Chart – single colour’</b>. First I thought about the <i>‘Arrests Made Over Time 
+									as a Line Chart – based on sex’</i>, and I did not see the power in it. I thought by Race would have been needed 
+									more.<br>
+									But this meant a ‘single colour chart’ would not work, so I changed it using Tableaus ‘Automatic’.<br><br>
+									<b>‘Arrests by Sex as a Stacked Bar Chart’</b> – by Sex is always a good breakdown. In crime it does seem to 
+									be more males getting caught, but in other situations it might surprise the viewer by not being the sex they 
+									think it would be.<br><br>
+									<b>‘Arrests by Crime Type as a Tree Chart’</b>. I can’t say I am a massive fan of Tree Charts 
+									(and I am even less of a fan of Bubble Charts), but with so 
+									many crime types (60) this is perfect. However, the original dashboard was not showing the number of crimes 
+									– unless you scrolled over. As a user, having to scroll over each one that grabs your attention is an 
+									annoying delay.<br><br>
+									<b>‘Arrests Made Over Time as a Line Chart – based on sex’</b>. As mentioned above, by Race would have more use.<br><br>
+									<hr>
+									<h2>Creating the Dashboard:</h2>
+									These were the most basic versions of charts - Bar, Stacked Bar, Tree, Line Chart -
+									with a slight change of the colour scheme for the 'by Race' charts.<br><br>
+									Connecting the dataset to the GeoJSON file - to show the boroughs - was a bit more difficult.
+
+									<div class="box">
+									The GeoJSON file had <i>"boro_name":"Staten Island"</i><br>
+									The NYPD file had Arrest_boro as <i>'S'</i><br>
+									Leaving the GeoJSON file as 'Staten Island' and changing the alias of the Arrest_boro in Tableau to 'Staten Island'
+									didn't work.<br>
+									I ended up modifying the GeoJSON files boro_name's (there were only 5 anyway) to the initial that was in the NYPD file.<br>
+									Again, this was to make importing new data as easy as possible - all the changes were on the GeoJSON file, and the aliases already set up in Tableau.
+									</div>
+									
+									When I placed all the charts in the relevant locations of the dashboard, I started turning on 'Use as Filter'.<br>
+									This is what allows the inter-activity between all the charts. <br>
+									<div class="row"><div class="col-9 col-12-small">
+									If you are downloading the dashboard, you will see 
+									these filters show up in the individual chart screens.<br>
+									These are added when you choose 'Use as Filter'.
+									</div>
+									<div class="col-3 col-12-small">
+									<img src="images/NYPD_Filters.jpg" alt="" />
+									</div>	
+									</div>
+									And so, the <i></i>Arrests by the NYPD</i> Dashboard went <b>from this:</b><br>
+									<img src="images/NYPDInspiration_Dashboard.jpg" alt="" /><br><br>
+									<b>To this:</b><br>
+									<img src="images/NYPD_Dashboard.jpg" alt="" /><br>
+									<sub>*I could not get the numbers on the map to change when I click on any of the other charts (yet), 
+									<br>but if you click on a borough, the other charts change.
+								</sub><br><br>
+
+									<ul class="actions special">
+										<li><a href="https://public.tableau.com/app/profile/will.mc2262/viz/NewYorkPDArrests/NYPDArrests" class="button large" target="_blank">View the Tableau Dashboard</a></li>
+									</ul>
+					</div>
+
+				<!-- Footer -->
+	<footer id="footer">
+		<section>
+			<img src="images/Will Mc.jpg" alt="" /><br>
+			I am a Data Analyst with critical thinking and data interrogation skills | Python | Tableau | Excel | SQL - Data Cleaner, Interrogator, Visualiser.
+		</section>
+		<section class="split contact">
+			<section class="alt">
+				<h3>Address</h3>
+				<p>Berlin Metropolitan Area, Germany</p>
+			</section>
+			<section>
+				<h3>Phone</h3>
+				<p><a href="#">(01525) 9483737</a></p>
+			</section>
+			<section>
+				<h3>Email</h3>
+				<p><a href="#">WillMcLG@gmail.com</a></p>
+			</section>
+			<section>
+				<h3>Social</h3>
+				<ul class="icons alt">
+					<li><a href="https://www.linkedin.com/in/willmc1/" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+				<li><a href="https://github.com/WillMc-DA" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+				</ul>
+			</section>
+		</section>
+	</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; William Mc Weeney</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
